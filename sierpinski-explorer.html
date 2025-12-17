@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sierpiński 6ab ± a ± b Problem Explorer | Interactive Research Tool</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #f1f1f1;
+            --text-secondary: #b8b8b8;
+            --gold: #d4af37;
+            --success: #4caf50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: var(--primary);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--gold);
+            font-size: 0.95rem;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .controls-panel {
+            width: 320px;
+            background: var(--secondary);
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-right: 1px solid var(--accent);
+        }
+
+        .visualization-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--primary);
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--secondary);
+            border-bottom: 1px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            border: 1px solid var(--accent);
+            background: #0a0a0f;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group h3 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .control-row {
+            margin-bottom: 0.75rem;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        input[type="number"], 
+        input[type="range"], 
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--primary);
+            color: var(--text);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--gold);
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats-panel {
+            background: var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-panel h4 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .description-panel {
+            background: rgba(15, 52, 96, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .description-panel.active {
+            display: block;
+        }
+
+        .toggle-description {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-description:hover {
+            background: var(--gold);
+            color: var(--primary);
+        }
+
+        .export-section {
+            border-top: 1px solid var(--accent);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .export-buttons button {
+            margin-bottom: 0;
+            font-size: 0.85rem;
+            padding: 0.5rem;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid transparent;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .range-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .range-display input[type="range"] {
+            flex: 1;
+        }
+
+        .range-value {
+            min-width: 50px;
+            text-align: right;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .formula-display {
+            background: #0a0a0f;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #61dafb;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .controls-panel {
+                width: 100%;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid var(--accent);
+            }
+            
+            .export-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sierpiński 6ab ± a ± b Problem Explorer</h1>
+        <div class="subtitle">Interactive visualization of numbers not expressible as 6ab ± a ± b</div>
+    </header>
+
+    <div class="main-container">
+        <div class="controls-panel">
+            <div class="stats-panel">
+                <h4>Statistics</h4>
+                <div class="stat-row">
+                    <span class="stat-label">Range:</span>
+                    <span class="stat-value" id="statRange">1-500</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Covered:</span>
+                    <span class="stat-value" id="statCovered">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Uncovered:</span>
+                    <span class="stat-value" id="statUncovered">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Coverage Rate:</span>
+                    <span class="stat-value" id="statCoverage">0%</span>
+                </div>
+            </div>
+
+            <button class="toggle-description" onclick="toggleDescriptions()">Toggle Descriptions</button>
+            
+            <div class="description-panel" id="coverageDesc">
+                <strong>Coverage Map:</strong> Visualizes which numbers can be expressed in the forms 6ab ± a ± b. Uncovered numbers appear as gaps in the coverage pattern.
+            </div>
+            
+            <div class="description-panel" id="latticeDesc">
+                <strong>Lattice Structure:</strong> Shows the 2D parameter space (a,b) and which values they generate. Each point represents a specific (a,b) pair colored by the value it produces.
+            </div>
+            
+            <div class="description-panel" id="gapDesc">
+                <strong>Gap Analysis:</strong> Linear visualization of uncovered numbers showing their distribution and clustering patterns.
+            </div>
+            
+            <div class="description-panel" id="statsDesc">
+                <strong>Statistical Analysis:</strong> Various statistical measures including density functions, modular distributions, and growth rates.
+            </div>
+            
+            <div class="description-panel" id="patternDesc">
+                <strong>Pattern Analysis:</strong> Detects arithmetic progressions, prime patterns, and other regularities in uncovered numbers.
+            </div>
+            
+            <div class="description-panel" id="formulaDesc">
+                <strong>Formula Explorer:</strong> Test individual numbers to see if they can be expressed in any of the four forms and visualize all generating pairs.
+            </div>
+
+            <div class="control-group">
+                <h3>Parameters</h3>
+                <div class="control-row">
+                    <label>Maximum N</label>
+                    <div class="range-display">
+                        <input type="range" id="maxN" min="100" max="5000" value="500" step="100">
+                        <span class="range-value" id="maxNValue">500</span>
+                    </div>
+                </div>
+                
+                <div class="control-row">
+                    <label>Search Depth (max a,b)</label>
+                    <div class="range-display">
+                        <input type="range" id="maxAB" min="10" max="100" value="23" step="1">
+                        <span class="range-value" id="maxABValue">23</span>
+                    </div>
+                </div>
+                
+                <div class="control-row">
+                    <label>
+                        <input type="checkbox" id="sqrtLock" checked>
+                        √n Lock (Optimal Search)
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Display Options</h3>
+                <div class="control-row">
+                    <label>Display Mode</label>
+                    <select id="displayMode">
+                        <option value="heatmap">Heatmap</option>
+                        <option value="binary">Binary (Covered/Uncovered)</option>
+                        <option value="forms">By Form Type</option>
+                        <option value="representations">Number of Representations</option>
+                    </select>
+                </div>
+                
+                <div class="control-row">
+                    <label>Label Display</label>
+                    <select id="labelDisplay">
+                        <option value="none">None</option>
+                        <option value="all">All Numbers</option>
+                        <option value="uncovered">Uncovered Only</option>
+                        <option value="every10">Every 10th</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="updateVisualization()">Update Visualization</button>
+
+            <div class="export-section">
+                <h3>Export Options</h3>
+                <div class="export-buttons">
+                    <button onclick="exportCurrentTab()">Export Tab (PNG)</button>
+                    <button onclick="exportAll()">Export All</button>
+                    <button onclick="exportData()">Export Data</button>
+                    <button onclick="generateReport()">Generate Report</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-area">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('coverage')">Coverage Map</button>
+                <button class="tab" onclick="switchTab('lattice')">Lattice Structure</button>
+                <button class="tab" onclick="switchTab('gap')">Gap Analysis</button>
+                <button class="tab" onclick="switchTab('statistics')">Statistics</button>
+                <button class="tab" onclick="switchTab('pattern')">Pattern Analysis</button>
+                <button class="tab" onclick="switchTab('formula')">Formula Explorer</button>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="mainCanvas" width="800" height="600"></canvas>
+                <div class="loading" id="loadingIndicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Calculating...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'coverage';
+        let coveredNumbers = new Set();
+        let uncoveredNumbers = [];
+        let numberRepresentations = new Map();
+        let maxN = 500;
+        let maxAB = 23;
+        let descriptionsVisible = false;
+
+        // Canvas and context
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            updateVisualization();
+        });
+
+        function setupEventListeners() {
+            // Range inputs with live display
+            document.getElementById('maxN').addEventListener('input', (e) => {
+                document.getElementById('maxNValue').textContent = e.target.value;
+                if (document.getElementById('sqrtLock').checked) {
+                    updateSqrtLock();
+                }
+            });
+
+            document.getElementById('maxAB').addEventListener('input', (e) => {
+                document.getElementById('maxABValue').textContent = e.target.value;
+            });
+
+            document.getElementById('sqrtLock').addEventListener('change', updateSqrtLock);
+        }
+
+        function updateSqrtLock() {
+            const sqrtLocked = document.getElementById('sqrtLock').checked;
+            const maxNInput = document.getElementById('maxN');
+            const maxABInput = document.getElementById('maxAB');
+            
+            if (sqrtLocked) {
+                const optimalAB = Math.ceil(Math.sqrt(parseInt(maxNInput.value) / 6));
+                maxABInput.value = optimalAB;
+                document.getElementById('maxABValue').textContent = optimalAB;
+                maxABInput.disabled = true;
+            } else {
+                maxABInput.disabled = false;
+            }
+        }
+
+        function calculateSierpinskiCoverage() {
+            maxN = parseInt(document.getElementById('maxN').value);
+            maxAB = parseInt(document.getElementById('maxAB').value);
+            
+            coveredNumbers.clear();
+            numberRepresentations.clear();
+            
+            // Calculate all four forms
+            for (let a = 1; a <= maxAB; a++) {
+                for (let b = 1; b <= maxAB; b++) {
+                    // Form 1: 6ab + a + b
+                    let n1 = 6 * a * b + a + b;
+                    if (n1 <= maxN) {
+                        coveredNumbers.add(n1);
+                        if (!numberRepresentations.has(n1)) {
+                            numberRepresentations.set(n1, []);
+                        }
+                        numberRepresentations.get(n1).push({a, b, form: 1});
+                    }
+                    
+                    // Form 2: 6ab + a - b
+                    let n2 = 6 * a * b + a - b;
+                    if (n2 > 0 && n2 <= maxN) {
+                        coveredNumbers.add(n2);
+                        if (!numberRepresentations.has(n2)) {
+                            numberRepresentations.set(n2, []);
+                        }
+                        numberRepresentations.get(n2).push({a, b, form: 2});
+                    }
+                    
+                    // Form 3: 6ab - a + b
+                    let n3 = 6 * a * b - a + b;
+                    if (n3 > 0 && n3 <= maxN) {
+                        coveredNumbers.add(n3);
+                        if (!numberRepresentations.has(n3)) {
+                            numberRepresentations.set(n3, []);
+                        }
+                        numberRepresentations.get(n3).push({a, b, form: 3});
+                    }
+                    
+                    // Form 4: 6ab - a - b
+                    let n4 = 6 * a * b - a - b;
+                    if (n4 > 0 && n4 <= maxN) {
+                        coveredNumbers.add(n4);
+                        if (!numberRepresentations.has(n4)) {
+                            numberRepresentations.set(n4, []);
+                        }
+                        numberRepresentations.get(n4).push({a, b, form: 4});
+                    }
+                }
+            }
+            
+            // Find uncovered numbers
+            uncoveredNumbers = [];
+            for (let i = 1; i <= maxN; i++) {
+                if (!coveredNumbers.has(i)) {
+                    uncoveredNumbers.push(i);
+                }
+            }
+            
+            updateStatistics();
+        }
+
+        function updateStatistics() {
+            document.getElementById('statRange').textContent = `1-${maxN}`;
+            document.getElementById('statCovered').textContent = coveredNumbers.size;
+            document.getElementById('statUncovered').textContent = uncoveredNumbers.length;
+            document.getElementById('statCoverage').textContent = 
+                ((coveredNumbers.size / maxN) * 100).toFixed(2) + '%';
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update description visibility
+            document.querySelectorAll('.description-panel').forEach(d => d.classList.remove('active'));
+            if (descriptionsVisible) {
+                const descMap = {
+                    'coverage': 'coverageDesc',
+                    'lattice': 'latticeDesc',
+                    'gap': 'gapDesc',
+                    'statistics': 'statsDesc',
+                    'pattern': 'patternDesc',
+                    'formula': 'formulaDesc'
+                };
+                const descId = descMap[tab];
+                if (descId) {
+                    document.getElementById(descId).classList.add('active');
+                }
+            }
+            
+            updateVisualization();
+        }
+
+        function toggleDescriptions() {
+            descriptionsVisible = !descriptionsVisible;
+            if (descriptionsVisible) {
+                switchTab(currentTab); // Refresh to show current description
+            } else {
+                document.querySelectorAll('.description-panel').forEach(d => d.classList.remove('active'));
+            }
+        }
+
+        function updateVisualization() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+            
+            setTimeout(() => {
+                calculateSierpinskiCoverage();
+                
+                switch(currentTab) {
+                    case 'coverage':
+                        drawCoverageMap();
+                        break;
+                    case 'lattice':
+                        drawLatticeStructure();
+                        break;
+                    case 'gap':
+                        drawGapAnalysis();
+                        break;
+                    case 'statistics':
+                        drawStatistics();
+                        break;
+                    case 'pattern':
+                        drawPatternAnalysis();
+                        break;
+                    case 'formula':
+                        drawFormulaExplorer();
+                        break;
+                }
+                
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }, 10);
+        }
+
+        function drawCoverageMap() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const displayMode = document.getElementById('displayMode').value;
+            const labelDisplay = document.getElementById('labelDisplay').value;
+            
+            const cols = Math.ceil(Math.sqrt(maxN));
+            const rows = Math.ceil(maxN / cols);
+            const cellWidth = canvas.width / cols;
+            const cellHeight = canvas.height / rows;
+            
+            // Draw cells
+            for (let i = 1; i <= maxN; i++) {
+                const col = (i - 1) % cols;
+                const row = Math.floor((i - 1) / cols);
+                const x = col * cellWidth;
+                const y = row * cellHeight;
+                
+                // Determine color based on display mode
+                let color;
+                if (displayMode === 'heatmap') {
+                    if (coveredNumbers.has(i)) {
+                        const reps = numberRepresentations.get(i).length;
+                        const intensity = Math.min(255, 50 + reps * 30);
+                        color = `rgb(${intensity}, ${intensity}, 50)`;
+                    } else {
+                        color = '#e94560';
+                    }
+                } else if (displayMode === 'binary') {
+                    color = coveredNumbers.has(i) ? '#4caf50' : '#e94560';
+                } else if (displayMode === 'forms') {
+                    if (coveredNumbers.has(i)) {
+                        const form = numberRepresentations.get(i)[0].form;
+                        const colors = ['#4caf50', '#2196f3', '#ff9800', '#9c27b0'];
+                        color = colors[form - 1];
+                    } else {
+                        color = '#e94560';
+                    }
+                } else if (displayMode === 'representations') {
+                    if (coveredNumbers.has(i)) {
+                        const reps = numberRepresentations.get(i).length;
+                        const hue = (reps * 30) % 360;
+                        color = `hsl(${hue}, 70%, 50%)`;
+                    } else {
+                        color = '#333';
+                    }
+                }
+                
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, cellWidth - 1, cellHeight - 1);
+                
+                // Draw labels
+                if (labelDisplay !== 'none') {
+                    const shouldLabel = 
+                        labelDisplay === 'all' ||
+                        (labelDisplay === 'uncovered' && !coveredNumbers.has(i)) ||
+                        (labelDisplay === 'every10' && i % 10 === 0);
+                    
+                    if (shouldLabel) {
+                        ctx.fillStyle = '#fff';
+                        ctx.font = `${Math.min(cellWidth * 0.3, 12)}px Arial`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(i, x + cellWidth / 2, y + cellHeight / 2);
+                    }
+                }
+            }
+            
+            // Draw title
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText('Coverage Map', 10, 30);
+        }
+
+        function drawLatticeStructure() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            const gridWidth = canvas.width - 2 * padding;
+            const gridHeight = canvas.height - 2 * padding;
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw grid lines
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 10; i++) {
+                const x = padding + (i / 10) * gridWidth;
+                const y = padding + (i / 10) * gridHeight;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, canvas.height - padding);
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Plot points
+            for (let a = 1; a <= maxAB; a++) {
+                for (let b = 1; b <= maxAB; b++) {
+                    const x = padding + (a / maxAB) * gridWidth;
+                    const y = canvas.height - padding - (b / maxAB) * gridHeight;
+                    
+                    // Calculate which form gives smallest value
+                    const values = [
+                        6 * a * b + a + b,
+                        6 * a * b + a - b,
+                        6 * a * b - a + b,
+                        6 * a * b - a - b
+                    ].filter(v => v > 0 && v <= maxN);
+                    
+                    if (values.length > 0) {
+                        const minValue = Math.min(...values);
+                        const hue = (minValue * 360 / maxN) % 360;
+                        ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            // Labels
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '14px Georgia';
+            ctx.textAlign = 'center';
+            ctx.fillText('a', canvas.width / 2, canvas.height - 10);
+            ctx.save();
+            ctx.translate(10, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('b', 0, 0);
+            ctx.restore();
+            
+            // Title
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText('Lattice Structure (a, b)', 10, 30);
+        }
+
+        function drawGapAnalysis() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (uncoveredNumbers.length === 0) {
+                ctx.fillStyle = '#d4af37';
+                ctx.font = '20px Georgia';
+                ctx.textAlign = 'center';
+                ctx.fillText('No uncovered numbers found', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+            
+            const padding = 40;
+            const graphWidth = canvas.width - 2 * padding;
+            const graphHeight = canvas.height - 2 * padding;
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Plot uncovered numbers
+            ctx.fillStyle = '#e94560';
+            uncoveredNumbers.forEach(n => {
+                const x = padding + (n / maxN) * graphWidth;
+                const y = canvas.height - padding - 20;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(x, y - 30);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(x, y - 35, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Calculate gaps
+            const gaps = [];
+            for (let i = 1; i < uncoveredNumbers.length; i++) {
+                gaps.push(uncoveredNumbers[i] - uncoveredNumbers[i-1]);
+            }
+            
+            // Draw gap histogram
+            if (gaps.length > 0) {
+                const maxGap = Math.max(...gaps);
+                const barWidth = graphWidth / gaps.length;
+                
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.6)';
+                gaps.forEach((gap, i) => {
+                    const x = padding + i * barWidth;
+                    const height = (gap / maxGap) * (graphHeight / 2);
+                    const y = padding + graphHeight / 2 - height;
+                    
+                    ctx.fillRect(x, y, barWidth - 2, height);
+                });
+            }
+            
+            // Title and labels
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText('Gap Analysis', 10, 30);
+            
+            ctx.font = '14px Georgia';
+            ctx.fillText(`Uncovered numbers: ${uncoveredNumbers.length}`, 10, 55);
+            if (gaps.length > 0) {
+                const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+                ctx.fillText(`Average gap: ${avgGap.toFixed(2)}`, 10, 75);
+            }
+        }
+
+        function drawStatistics() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 40;
+            const graphWidth = canvas.width - 2 * padding;
+            const graphHeight = canvas.height - 2 * padding;
+            
+            // Calculate modulo 6 distribution
+            const mod6Count = [0, 0, 0, 0, 0, 0];
+            uncoveredNumbers.forEach(n => {
+                mod6Count[n % 6]++;
+            });
+            
+            // Draw bar chart
+            const barWidth = graphWidth / 6;
+            const maxCount = Math.max(...mod6Count);
+            
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Draw bars
+            mod6Count.forEach((count, i) => {
+                const x = padding + i * barWidth + barWidth * 0.1;
+                const width = barWidth * 0.8;
+                const height = maxCount > 0 ? (count / maxCount) * graphHeight * 0.8 : 0;
+                const y = canvas.height - padding - height;
+                
+                const hue = i * 60;
+                ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+                ctx.fillRect(x, y, width, height);
+                
+                // Labels
+                ctx.fillStyle = '#d4af37';
+                ctx.font = '14px Georgia';
+                ctx.textAlign = 'center';
+                ctx.fillText(`n≡${i} (mod 6)`, x + width/2, canvas.height - padding + 20);
+                ctx.fillText(count, x + width/2, y - 10);
+            });
+            
+            // Title
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText('Modulo 6 Distribution', 10, 30);
+        }
+
+        function drawPatternAnalysis() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Find patterns in uncovered numbers
+            const primes = uncoveredNumbers.filter(isPrime);
+            const composites = uncoveredNumbers.filter(n => !isPrime(n));
+            
+            // Find arithmetic progressions
+            const progressions = findArithmeticProgressions(uncoveredNumbers);
+            
+            // Draw visualization
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText('Pattern Analysis', 10, 30);
+            
+            ctx.font = '14px Georgia';
+            let y = 60;
+            
+            ctx.fillText(`Total uncovered: ${uncoveredNumbers.length}`, 10, y);
+            y += 25;
+            ctx.fillText(`Primes: ${primes.length} (${(primes.length/uncoveredNumbers.length*100).toFixed(1)}%)`, 10, y);
+            y += 25;
+            ctx.fillText(`Composites: ${composites.length} (${(composites.length/uncoveredNumbers.length*100).toFixed(1)}%)`, 10, y);
+            y += 35;
+            
+            if (progressions.length > 0) {
+                ctx.fillText('Arithmetic Progressions Found:', 10, y);
+                y += 25;
+                progressions.slice(0, 5).forEach(prog => {
+                    ctx.font = '12px Courier New';
+                    ctx.fillStyle = '#b8b8b8';
+                    ctx.fillText(`  ${prog.join(', ')} (difference: ${prog[1] - prog[0]})`, 10, y);
+                    y += 20;
+                });
+            }
+            
+            // Visual representation
+            const startY = Math.max(y + 20, 250);
+            const barHeight = 20;
+            
+            // Draw prime/composite bar
+            const primeWidth = (primes.length / uncoveredNumbers.length) * (canvas.width - 20);
+            ctx.fillStyle = '#4caf50';
+            ctx.fillRect(10, startY, primeWidth, barHeight);
+            ctx.fillStyle = '#e94560';
+            ctx.fillRect(10 + primeWidth, startY, canvas.width - 20 - primeWidth, barHeight);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Primes', 10 + primeWidth/2, startY + barHeight/2 + 4);
+            ctx.fillText('Composites', 10 + primeWidth + (canvas.width - 20 - primeWidth)/2, startY + barHeight/2 + 4);
+        }
+
+        function drawFormulaExplorer() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Test a specific number
+            const testNumber = 177; // Largest uncovered number < 1000
+            
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '20px Georgia';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Formula Explorer: n = ${testNumber}`, 10, 30);
+            
+            ctx.font = '14px Georgia';
+            let y = 60;
+            
+            if (coveredNumbers.has(testNumber)) {
+                ctx.fillStyle = '#4caf50';
+                ctx.fillText(`✓ ${testNumber} is covered`, 10, y);
+                y += 30;
+                
+                const reps = numberRepresentations.get(testNumber);
+                ctx.fillStyle = '#b8b8b8';
+                ctx.fillText(`Found ${reps.length} representation(s):`, 10, y);
+                y += 25;
+                
+                reps.slice(0, 10).forEach(rep => {
+                    const formulas = [
+                        `6·${rep.a}·${rep.b} + ${rep.a} + ${rep.b}`,
+                        `6·${rep.a}·${rep.b} + ${rep.a} - ${rep.b}`,
+                        `6·${rep.a}·${rep.b} - ${rep.a} + ${rep.b}`,
+                        `6·${rep.a}·${rep.b} - ${rep.a} - ${rep.b}`
+                    ];
+                    ctx.font = '12px Courier New';
+                    ctx.fillText(`  Form ${rep.form}: ${formulas[rep.form - 1]} = ${testNumber}`, 10, y);
+                    y += 20;
+                });
+            } else {
+                ctx.fillStyle = '#e94560';
+                ctx.fillText(`✗ ${testNumber} is uncovered`, 10, y);
+                y += 30;
+                ctx.fillStyle = '#b8b8b8';
+                ctx.fillText('No representations found in any of the four forms', 10, y);
+            }
+            
+            // Draw visual grid showing search space
+            const gridStartY = Math.max(y + 40, 300);
+            const cellSize = 10;
+            const gridSize = Math.min(30, maxAB);
+            
+            for (let a = 1; a <= gridSize; a++) {
+                for (let b = 1; b <= gridSize; b++) {
+                    const x = 10 + (a - 1) * cellSize;
+                    const y = gridStartY + (b - 1) * cellSize;
+                    
+                    let found = false;
+                    const values = [
+                        6 * a * b + a + b,
+                        6 * a * b + a - b,
+                        6 * a * b - a + b,
+                        6 * a * b - a - b
+                    ];
+                    
+                    if (values.includes(testNumber)) {
+                        found = true;
+                    }
+                    
+                    ctx.fillStyle = found ? '#4caf50' : '#333';
+                    ctx.fillRect(x, y, cellSize - 1, cellSize - 1);
+                }
+            }
+            
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '12px Georgia';
+            ctx.fillText('(a, b) parameter space', 10, gridStartY - 10);
+        }
+
+        // Helper functions
+        function isPrime(n) {
+            if (n < 2) return false;
+            if (n === 2) return true;
+            if (n % 2 === 0) return false;
+            for (let i = 3; i * i <= n; i += 2) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        function findArithmeticProgressions(numbers) {
+            const progressions = [];
+            
+            for (let i = 0; i < numbers.length - 2; i++) {
+                for (let j = i + 1; j < numbers.length - 1; j++) {
+                    const diff = numbers[j] - numbers[i];
+                    const progression = [numbers[i], numbers[j]];
+                    
+                    let next = numbers[j] + diff;
+                    while (numbers.includes(next) && progression.length < 5) {
+                        progression.push(next);
+                        next += diff;
+                    }
+                    
+                    if (progression.length >= 3) {
+                        progressions.push(progression);
+                    }
+                }
+            }
+            
+            return progressions;
+        }
+
+        // Export functions
+        function exportCurrentTab() {
+            const link = document.createElement('a');
+            link.download = `sierpinski-${currentTab}-${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function exportAll() {
+            // Create a temporary canvas for high-res export
+            const exportCanvas = document.createElement('canvas');
+            exportCanvas.width = 2000;
+            exportCanvas.height = 1500;
+            const exportCtx = exportCanvas.getContext('2d');
+            
+            // Save current state
+            const tempTab = currentTab;
+            const tempCanvas = canvas;
+            const tempCtx = ctx;
+            
+            // Temporarily use export canvas
+            canvas.width = exportCanvas.width;
+            canvas.height = exportCanvas.height;
+            
+            // Draw title and metadata
+            exportCtx.fillStyle = '#1a1a2e';
+            exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+            
+            exportCtx.fillStyle = '#d4af37';
+            exportCtx.font = '36px Georgia';
+            exportCtx.textAlign = 'center';
+            exportCtx.fillText('Sierpiński 6ab ± a ± b Problem Analysis', exportCanvas.width/2, 50);
+            
+            exportCtx.font = '18px Georgia';
+            exportCtx.fillStyle = '#b8b8b8';
+            exportCtx.fillText(`Generated: ${new Date().toISOString()}`, exportCanvas.width/2, 80);
+            exportCtx.fillText(`Parameters: N ≤ ${maxN}, Search depth: ${maxAB}`, exportCanvas.width/2, 110);
+            exportCtx.fillText(`Coverage: ${coveredNumbers.size}/${maxN} (${((coveredNumbers.size/maxN)*100).toFixed(2)}%)`, exportCanvas.width/2, 140);
+            
+            // Draw uncovered numbers list
+            exportCtx.textAlign = 'left';
+            exportCtx.font = '14px Courier New';
+            exportCtx.fillText(`Uncovered numbers: ${uncoveredNumbers.slice(0, 20).join(', ')}...`, 50, 180);
+            
+            // Add attribution
+            exportCtx.textAlign = 'right';
+            exportCtx.font = '14px Georgia';
+            exportCtx.fillStyle = '#666';
+            exportCtx.fillText('Implementation: Wessen Getachew (@7dview)', exportCanvas.width - 50, exportCanvas.height - 30);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = `sierpinski-complete-analysis-${Date.now()}.png`;
+            link.href = exportCanvas.toDataURL();
+            link.click();
+            
+            // Restore
+            canvas.width = 800;
+            canvas.height = 600;
+            currentTab = tempTab;
+        }
+
+        function exportData() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                parameters: {
+                    maxN: maxN,
+                    maxAB: maxAB,
+                    sqrtOptimized: document.getElementById('sqrtLock').checked
+                },
+                statistics: {
+                    covered: coveredNumbers.size,
+                    uncovered: uncoveredNumbers.length,
+                    coverageRate: ((coveredNumbers.size / maxN) * 100).toFixed(2) + '%'
+                },
+                uncoveredNumbers: uncoveredNumbers,
+                firstUncovered: uncoveredNumbers.slice(0, 20),
+                modulo6Distribution: (() => {
+                    const dist = [0, 0, 0, 0, 0, 0];
+                    uncoveredNumbers.forEach(n => dist[n % 6]++);
+                    return dist;
+                })()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const link = document.createElement('a');
+            link.download = `sierpinski-data-${Date.now()}.json`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+
+        function generateReport() {
+            const report = `SIERPIŃSKI 6ab ± a ± b PROBLEM ANALYSIS REPORT
+==============================================
+Generated: ${new Date().toISOString()}
+
+PARAMETERS
+----------
+Maximum N: ${maxN}
+Search Depth (max a,b): ${maxAB}
+√n Optimization: ${document.getElementById('sqrtLock').checked ? 'Enabled' : 'Disabled'}
+
+STATISTICS
+----------
+Total Numbers Analyzed: ${maxN}
+Covered Numbers: ${coveredNumbers.size}
+Uncovered Numbers: ${uncoveredNumbers.length}
+Coverage Rate: ${((coveredNumbers.size / maxN) * 100).toFixed(2)}%
+
+UNCOVERED NUMBERS (First 50)
+-----------------------------
+${uncoveredNumbers.slice(0, 50).join(', ')}
+
+MODULO 6 DISTRIBUTION
+--------------------
+${(() => {
+    const dist = [0, 0, 0, 0, 0, 0];
+    uncoveredNumbers.forEach(n => dist[n % 6]++);
+    return dist.map((count, i) => `n ≡ ${i} (mod 6): ${count} numbers`).join('\n');
+})()}
+
+MATHEMATICAL SIGNIFICANCE
+------------------------
+The Sierpiński problem asks whether infinitely many positive integers
+cannot be expressed in any of the four forms:
+- 6ab + a + b = (3a + 1)(2b + 1) - 1
+- 6ab + a - b = (3a + 1)(2b - 1) - 1
+- 6ab - a + b = (3a - 1)(2b + 1) - 1
+- 6ab - a - b = (3a - 1)(2b - 1) - 1
+
+This remains an unsolved problem since 1964.
+
+IMPLEMENTATION
+-------------
+Created by: Wessen Getachew (@7dview)
+Algorithm: Direct computation with √n optimization
+Visualization: Interactive HTML5 Canvas
+
+END OF REPORT`;
+            
+            const blob = new Blob([report], {type: 'text/plain'});
+            const link = document.createElement('a');
+            link.download = `sierpinski-report-${Date.now()}.txt`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+    </script>
+</body>
+</html>
