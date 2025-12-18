@@ -20,7 +20,7 @@
             line-height: 1.6;
             color: #222;
             background-color: #fefefe;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
             counter-reset: section;
@@ -34,6 +34,22 @@
             padding-bottom: 0.5rem;
             border-bottom: 2px solid #1a5fb4;
             color: #1a5fb4;
+        }
+        
+        .author {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+        
+        .author a {
+            color: #1a5fb4;
+            text-decoration: none;
+        }
+        
+        .author a:hover {
+            text-decoration: underline;
         }
         
         h2 {
@@ -172,11 +188,31 @@
         /* Footer */
         footer {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
             padding-top: 1rem;
             border-top: 1px solid #ddd;
             color: #666;
             font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        footer .attribution {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        footer .social {
+            margin-top: 0.5rem;
+        }
+        
+        footer .social a {
+            color: #1a5fb4;
+            text-decoration: none;
+        }
+        
+        footer .social a:hover {
+            text-decoration: underline;
         }
         
         /* Responsive design */
@@ -204,31 +240,81 @@
             background-color: #f0f7ff;
             border: 1px solid #c5d9f0;
             border-radius: 5px;
-            padding: 1rem;
-            margin: 1.5rem 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
         }
         
         .interactive-controls h4 {
             margin-top: 0;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
             color: #1a5fb4;
+            font-size: 1.1rem;
         }
         
         .slider-container {
-            margin: 0.8rem 0;
+            margin: 1rem 0;
         }
         
         .slider-container label {
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
             font-weight: bold;
+            font-size: 0.95rem;
         }
         
         .slider-value {
             display: inline-block;
-            min-width: 30px;
+            min-width: 40px;
             font-weight: bold;
             color: #1a5fb4;
+            font-size: 1.1rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a5fb4;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a5fb4;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .calc-results {
+            background-color: white;
+            border: 1px solid #c5d9f0;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .calc-results p {
+            margin-bottom: 0.5rem;
         }
         
         /* MathJax styling */
@@ -239,11 +325,20 @@
         mjx-container[jax="CHTML"][display="true"] {
             margin: 1em 0 !important;
         }
+        
+        /* Highlight for interactive table */
+        .highlighted {
+            background-color: #e6f2ff !important;
+            box-shadow: 0 0 0 2px #4d94ff;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>The Boundary Cancellation Principle:<br>An Analysis of Arithmetic Lattice Residues</h1>
+        <div class="author">
+            By <strong>Wessen Getachew</strong> · Twitter: <a href="https://twitter.com/7dview" target="_blank">@7dview</a>
+        </div>
     </header>
     
     <main>
@@ -346,7 +441,7 @@
         </section>
         
         <section>
-            <h2>Dimensional Scaling (k=2 to k=6)</h2>
+            <h2>Dimensional Scaling (k=2 to k=12)</h2>
             <p>As we increase the dimension \(k\), the "Density Filter" becomes less aggressive, and the Main Term (\(R^k\)) grows significantly faster than the Boundary Term (\(R^{k-1}\)).</p>
             
             <table class="dimension-table">
@@ -395,24 +490,46 @@
                         <td>Extreme</td>
                         <td>\(1/\zeta(6) \approx 0.9829\)</td>
                     </tr>
+                    <tr>
+                        <td>k=8</td>
+                        <td>Coprime Octuples</td>
+                        <td>7D Hypersurface (\(R^7\))</td>
+                        <td>Extreme+</td>
+                        <td>\(1/\zeta(8) \approx 0.9959\)</td>
+                    </tr>
+                    <tr>
+                        <td>k=10</td>
+                        <td>Coprime 10-tuples</td>
+                        <td>9D Hypersurface (\(R^9\))</td>
+                        <td>Approaching 1</td>
+                        <td>\(1/\zeta(10) \approx 0.9990\)</td>
+                    </tr>
+                    <tr>
+                        <td>k=12</td>
+                        <td>Coprime 12-tuples</td>
+                        <td>11D Hypersurface (\(R^{11}\))</td>
+                        <td>Nearly 1</td>
+                        <td>\(1/\zeta(12) \approx 0.9998\)</td>
+                    </tr>
                 </tbody>
             </table>
             
             <div class="interactive-controls">
                 <h4>Explore Dimensional Scaling</h4>
                 <div class="slider-container">
-                    <label for="dimension-slider">Dimension \(k\): <span class="slider-value" id="dimension-value">3</span></label>
-                    <input type="range" id="dimension-slider" min="2" max="8" value="3" step="1">
+                    <label for="dimension-slider">Dimension \(k\): <span class="slider-value" id="dimension-value">3</span> (2 to 12)</label>
+                    <input type="range" id="dimension-slider" min="2" max="12" value="3" step="1">
                 </div>
                 <div class="slider-container">
-                    <label for="radius-slider">Radius \(R\): <span class="slider-value" id="radius-value">50</span></label>
-                    <input type="range" id="radius-slider" min="10" max="200" value="50" step="10">
+                    <label for="radius-slider">Radius \(R\): <span class="slider-value" id="radius-value">100</span> (10 to 1000)</label>
+                    <input type="range" id="radius-slider" min="10" max="1000" value="100" step="10">
                 </div>
-                <div id="scaling-output">
-                    <p>For \(k = 3\), \(R = 50\):</p>
-                    <p>Main term: \(R^k = 50^3 = 125,000\)</p>
-                    <p>Boundary term: \(R^{k-1} = 50^2 = 2,500\)</p>
-                    <p>Relative error: \(2,500 / 125,000 = 0.02 = 2\%\)</p>
+                <div class="calc-results" id="scaling-output">
+                    <p>For \(k = 3\), \(R = 100\):</p>
+                    <p>Main term: \(R^k = 100^3 = 1,000,000\)</p>
+                    <p>Boundary term: \(R^{k-1} = 100^2 = 10,000\)</p>
+                    <p>Relative error: \(10,000 / 1,000,000 = 0.01 = 1.00\%\)</p>
+                    <p>Density \(1/\zeta(3) \approx 0.8319\)</p>
                 </div>
             </div>
         </section>
@@ -470,12 +587,19 @@
                                 <td style="padding: 0.5rem; text-align: center;">7.7</td>
                                 <td style="padding: 0.5rem; text-align: center;">0.017</td>
                             </tr>
-                            <tr>
+                            <tr style="border-bottom: 1px solid #ddd;">
                                 <td style="padding: 0.5rem; text-align: center;">500</td>
                                 <td style="padding: 0.5rem; text-align: center;">151,983</td>
                                 <td style="padding: 0.5rem; text-align: center;">151,982.5</td>
                                 <td style="padding: 0.5rem; text-align: center;">0.5</td>
                                 <td style="padding: 0.5rem; text-align: center;">0.0002</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.5rem; text-align: center;">1000</td>
+                                <td style="padding: 0.5rem; text-align: center;">607,926</td>
+                                <td style="padding: 0.5rem; text-align: center;">607,927.0</td>
+                                <td style="padding: 0.5rem; text-align: center;">-1.0</td>
+                                <td style="padding: 0.5rem; text-align: center;">-0.0001</td>
                             </tr>
                         </tbody>
                     </table>
@@ -507,8 +631,16 @@
     </main>
     
     <footer>
-        <p>The Boundary Cancellation Principle &copy; 2023 | An analysis of arithmetic lattice residues</p>
-        <p>For the 3Blue1Brown community and the mathematical world</p>
+        <div class="attribution">
+            The Boundary Cancellation Principle: An Analysis of Arithmetic Lattice Residues
+        </div>
+        <div>© 2025 · By Wessen Getachew</div>
+        <div class="social">
+            Twitter: <a href="https://twitter.com/7dview" target="_blank">@7dview</a>
+        </div>
+        <div style="margin-top: 0.8rem; font-size: 0.8rem;">
+            For the 3Blue1Brown community and the mathematical world
+        </div>
     </footer>
     
     <script>
@@ -519,7 +651,7 @@
         const radiusValue = document.getElementById('radius-value');
         const scalingOutput = document.getElementById('scaling-output');
         
-        // Zeta values for k=2 to k=8
+        // Zeta values for k=2 to k=12
         const zetaValues = {
             2: Math.PI**2 / 6,
             3: 1.202056903159594285399738161511449990764986292,
@@ -527,8 +659,39 @@
             5: 1.036927755143369926331365486457034168057080919,
             6: Math.PI**6 / 945,
             7: 1.008349277381922826839797549849796759599863560,
-            8: Math.PI**8 / 9450
+            8: Math.PI**8 / 9450,
+            9: 1.002008392826082214417,
+            10: Math.PI**10 / 93555,
+            11: 1.000494188604119464558,
+            12: Math.PI**12 / 638512875
         };
+        
+        function formatNumber(num) {
+            if (num >= 1e9) {
+                return (num / 1e9).toFixed(2) + ' billion';
+            } else if (num >= 1e6) {
+                return (num / 1e6).toFixed(2) + ' million';
+            } else if (num >= 1e4) {
+                return num.toLocaleString();
+            } else {
+                return num.toString();
+            }
+        }
+        
+        function formatScientific(num) {
+            if (num === 0) return '0';
+            if (Math.abs(num) < 0.0001) {
+                return num.toExponential(4);
+            } else if (Math.abs(num) < 0.01) {
+                return num.toFixed(6);
+            } else if (Math.abs(num) < 1) {
+                return num.toFixed(4);
+            } else if (num < 1000) {
+                return num.toFixed(2);
+            } else {
+                return formatNumber(num);
+            }
+        }
         
         function updateScaling() {
             const k = parseInt(dimensionSlider.value);
@@ -544,10 +707,10 @@
             
             scalingOutput.innerHTML = `
                 <p>For \(k = ${k}\), \(R = ${R}\):</p>
-                <p>Main term: \(R^k = ${R}^{${k}} = ${mainTerm.toLocaleString()}\)</p>
-                <p>Boundary term: \(R^{k-1} = ${R}^{${k-1}} = ${boundaryTerm.toLocaleString()}\)</p>
-                <p>Relative error: \(${boundaryTerm.toLocaleString()} / ${mainTerm.toLocaleString()} = ${relativeError.toFixed(4)} = ${(relativeError*100).toFixed(2)}\%\)</p>
-                <p>Density \(1/\\zeta(${k}) \\approx ${density.toFixed(4)}\)</p>
+                <p>Main term: \(R^k = ${R}^{${k}} = ${formatScientific(mainTerm)}\)</p>
+                <p>Boundary term: \(R^{k-1} = ${R}^{${k-1}} = ${formatScientific(boundaryTerm)}\)</p>
+                <p>Relative error: \(${formatScientific(boundaryTerm)} / ${formatScientific(mainTerm)} = ${relativeError.toExponential(4)} = ${(relativeError*100).toFixed(4)}\%\)</p>
+                <p>Density \(1/\\zeta(${k}) \\approx ${density.toFixed(6)}\)</p>
             `;
             
             // Trigger MathJax to re-render the LaTeX
@@ -565,25 +728,107 @@
         // Add interactivity to table rows
         document.querySelectorAll('.dimension-table tbody tr').forEach(row => {
             row.addEventListener('click', function() {
-                this.classList.toggle('highlighted');
+                // Remove highlight from all rows
+                document.querySelectorAll('.dimension-table tbody tr').forEach(r => {
+                    r.classList.remove('highlighted');
+                });
+                // Add highlight to clicked row
+                this.classList.add('highlighted');
+                
+                // Update sliders to match the clicked row
+                const k = parseInt(this.cells[0].textContent);
+                const R = parseInt(radiusSlider.value);
+                
+                if (k >= 2 && k <= 12) {
+                    dimensionSlider.value = k;
+                    updateScaling();
+                }
             });
         });
         
         // Add keyboard navigation for accessibility
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                const activeElement = document.activeElement;
-                if (activeElement.id === 'dimension-slider') {
-                    e.preventDefault();
-                    if (e.key === 'ArrowUp') {
-                        dimensionSlider.value = Math.min(8, parseInt(dimensionSlider.value) + 1);
-                    } else {
-                        dimensionSlider.value = Math.max(2, parseInt(dimensionSlider.value) - 1);
-                    }
+            const activeElement = document.activeElement;
+            
+            if (activeElement.id === 'dimension-slider') {
+                if (e.key === 'ArrowRight') {
+                    dimensionSlider.value = Math.min(12, parseInt(dimensionSlider.value) + 1);
+                    updateScaling();
+                } else if (e.key === 'ArrowLeft') {
+                    dimensionSlider.value = Math.max(2, parseInt(dimensionSlider.value) - 1);
+                    updateScaling();
+                }
+            } else if (activeElement.id === 'radius-slider') {
+                if (e.key === 'ArrowRight') {
+                    radiusSlider.value = Math.min(1000, parseInt(radiusSlider.value) + 10);
+                    updateScaling();
+                } else if (e.key === 'ArrowLeft') {
+                    radiusSlider.value = Math.max(10, parseInt(radiusSlider.value) - 10);
                     updateScaling();
                 }
             }
         });
+        
+        // Add step buttons for sliders (optional enhancement)
+        const addStepButtons = () => {
+            const controls = document.querySelector('.interactive-controls');
+            
+            // Add dimension step buttons
+            const dimContainer = dimensionSlider.parentElement;
+            const dimButtons = document.createElement('div');
+            dimButtons.innerHTML = `
+                <button type="button" class="step-btn" data-target="dimension" data-change="-1">-1</button>
+                <button type="button" class="step-btn" data-target="dimension" data-change="+1">+1</button>
+            `;
+            dimContainer.appendChild(dimButtons);
+            
+            // Add radius step buttons
+            const radContainer = radiusSlider.parentElement;
+            const radButtons = document.createElement('div');
+            radButtons.innerHTML = `
+                <button type="button" class="step-btn" data-target="radius" data-change="-50">-50</button>
+                <button type="button" class="step-btn" data-target="radius" data-change="+50">+50</button>
+            `;
+            radContainer.appendChild(radButtons);
+            
+            // Style the buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .step-btn {
+                    margin: 5px 5px 0 0;
+                    padding: 3px 8px;
+                    background-color: #1a5fb4;
+                    color: white;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                }
+                .step-btn:hover {
+                    background-color: #0d4a9e;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Add button click handlers
+            document.querySelectorAll('.step-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+                    const change = parseInt(this.getAttribute('data-change'));
+                    
+                    if (target === 'dimension') {
+                        dimensionSlider.value = Math.max(2, Math.min(12, parseInt(dimensionSlider.value) + change));
+                    } else if (target === 'radius') {
+                        radiusSlider.value = Math.max(10, Math.min(1000, parseInt(radiusSlider.value) + change));
+                    }
+                    
+                    updateScaling();
+                });
+            });
+        };
+        
+        // Uncomment to add step buttons
+        // addStepButtons();
     </script>
 </body>
-                                       </html>
+</html>
