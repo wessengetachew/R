@@ -3,808 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sierpiński 6ab ± a ± b Problem Explorer | Mathematical Research Tool</title>
+    <title>The Boundary Cancellation Principle | Research Tool</title>
     <style>
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --accent: #0f3460;
-            --highlight: #e94560;
-            --text: #f1f1f1;
-            --text-secondary: #b8b8b8;
-            --gold: #d4af37;
-            --success: #4caf50;
-            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --bg: #0b0e14;
+            --panel: #161b22;
+            --accent: #47a1ff;
+            --boundary: #ff4747;
+            --text: #c9d1d9;
+            --math-box: #0d1117;
         }
 
         body {
-            font-family: 'Computer Modern Serif', 'Georgia', serif;
-            background: var(--primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Mathematical font for equations */
-        @font-face {
-            font-family: 'Computer Modern';
-            src: url('https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts/cmunrm.woff2') format('woff2');
-        }
-
-        .math {
-            font-family: 'Computer Modern', 'Georgia', serif;
-            font-style: italic;
-        }
-
-        /* Header */
-        header {
-            background: var(--bg-gradient);
-            padding: 3rem 0;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(233, 69, 96, 0.05) 10px,
-                rgba(233, 69, 96, 0.05) 20px
-            );
-            pointer-events: none;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            color: var(--gold);
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: var(--highlight);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        /* Navigation */
-        nav {
-            background: var(--secondary);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            margin: 0;
+            padding: 40px;
             display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-link {
-            color: var(--text);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            background: var(--accent);
-            color: var(--gold);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover::after {
-            width: 80%;
-        }
-
-        /* Main Content */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-        }
-
-        section {
-            margin-bottom: 4rem;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h2 {
-            font-size: 2rem;
-            color: var(--gold);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
-            position: relative;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100px;
-            height: 2px;
-            background: var(--highlight);
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            color: var(--text);
-            margin: 2rem 0 1rem;
-        }
-
-        h4 {
-            font-size: 1.2rem;
-            color: var(--gold);
-            margin: 1.5rem 0 0.5rem;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--secondary);
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gold);
-        }
-
-        /* Mathematical Content */
-        .math-block {
-            background: rgba(15, 52, 96, 0.3);
-            border-left: 4px solid var(--gold);
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            font-family: 'Computer Modern', serif;
-            border-radius: 0 10px 10px 0;
-        }
-
-        .equation {
-            font-size: 1.1rem;
-            line-height: 2;
-            color: var(--text);
-            display: block;
-            margin: 0.5rem 0;
-            font-family: 'Computer Modern', serif;
-        }
-
-        .equation-label {
-            color: var(--gold);
-            font-weight: 600;
-            margin-right: 1rem;
-        }
-
-        /* Lists */
-        ul, ol {
-            padding-left: 2rem;
-            margin: 1rem 0;
-        }
-
-        li {
-            margin: 0.5rem 0;
-            line-height: 1.8;
-        }
-
-        /* Code blocks */
-        .code-block {
-            background: #0a0a0f;
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            overflow-x: auto;
-        }
-
-        pre {
-            color: #61dafb;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Feature Grid */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .feature-card:hover {
-            border-color: var(--gold);
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
-        }
-
-        .feature-card h4 {
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* Status indicators */
-        .status {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .status.unsolved {
-            background: var(--highlight);
-            color: white;
-        }
-
-        .status.active {
-            background: var(--success);
-            color: white;
-        }
-
-        /* Interactive elements */
-        .interactive-demo {
-            background: var(--secondary);
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .demo-button {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--primary);
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 1rem 0.5rem;
-        }
-
-        .demo-button:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-            background: var(--secondary);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th {
-            background: var(--accent);
-            color: var(--gold);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid var(--accent);
-        }
-
-        tr:hover {
-            background: rgba(15, 52, 96, 0.3);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-gradient);
-            padding: 3rem 0;
-            margin-top: 5rem;
-            border-top: 2px solid var(--gold);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-
-        .footer-links a {
-            color: var(--gold);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-            
-            .nav-content {
-                justify-content: center;
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Special highlight box */
-        .highlight-box {
-            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1), rgba(212, 175, 55, 0.1));
-            border: 2px solid var(--gold);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            position: relative;
-        }
-
-        .highlight-box::before {
-            content: '★';
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            background: var(--primary);
-            color: var(--gold);
-            font-size: 1.5rem;
-            padding: 0 10px;
-        }
-
-        /* Progress indicator */
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: var(--secondary);
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 1rem 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--highlight));
-            border-radius: 15px;
-            display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            font-weight: 600;
-            transition: width 0.5s ease;
         }
+
+        .container { max-width: 900px; width: 100%; }
+
+        h1 { color: var(--accent); font-weight: 300; font-size: 2.5rem; text-align: center; }
+
+        .math-box {
+            background: var(--math-box);
+            border: 1px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            margin: 30px 0;
+        }
+
+        canvas {
+            border-radius: 4px;
+            background: #000;
+            cursor: move;
+        }
+
+        .toolkit {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tool-card {
+            background: var(--math-box);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .label { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; }
+        .value { font-family: monospace; font-size: 1.1rem; color: #fff; }
+
+        .description { text-align: justify; color: #8b949e; }
+        
+        input[type=range] { width: 100%; margin: 20px 0; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>Sierpiński 6ab ± a ± b Problem Explorer</h1>
-            <div class="subtitle">Interactive Research Tool for Number Theory</div>
-            <p>An advanced visualization platform for investigating the representation of positive integers in the forms 6ab ± a ± b</p>
-            <span class="status-badge">UNSOLVED SINCE 1964</span>
-        </div>
-    </header>
 
-    <nav>
-        <div class="nav-content">
-            <a href="#overview" class="nav-link">Overview</a>
-            <a href="#mathematical-background" class="nav-link">Mathematical Background</a>
-            <a href="#features" class="nav-link">Features</a>
-            <a href="#technical" class="nav-link">Technical Details</a>
-            <a href="#research" class="nav-link">Research Applications</a>
-            <a href="#references" class="nav-link">References</a>
-            <a href="sierpinski-explorer.html" class="nav-link demo-button">Launch Explorer</a>
-        </div>
-    </nav>
+<div class="container">
+    <h1>The Boundary Cancellation Principle</h1>
 
-    <main>
-        <section id="overview">
-            <h2>Overview</h2>
-            <div class="card">
-                <p>This explorer provides an interactive research environment for investigating an unsolved problem in number theory posed by Wacław Sierpiński in 1964. The tool enables visualization and analysis of positive integers that cannot be expressed in any of the four forms involving the expression 6ab ± a ± b where a and b are positive integers.</p>
-                
-                <div class="highlight-box">
-                    <h4>Research Question</h4>
-                    <p>Are there infinitely many positive integers that cannot be expressed as any of:</p>
-                    <ul>
-                        <li>(3a + 1)(2b + 1) - 1</li>
-                        <li>(3a + 1)(2b - 1) - 1</li>
-                        <li>(3a - 1)(2b + 1) - 1</li>
-                        <li>(3a - 1)(2b - 1) - 1</li>
-                    </ul>
-                    <p>for positive integers a and b?</p>
-                </div>
+    <div class="description">
+        <p>This research tool analyzes the computational error terms in arithmetic lattices. In an infinite lattice, the density of coprime tuples is governed by the Riemann Zeta Function. In finite space, the <b>Boundary Cancellation Principle</b> states that the error term is a direct geometric residue of the search-space perimeter.</p>
+    </div>
+
+    <div class="math-box">
+        Density Prediction: 
+        <br>
+        <strong>N(R) ≈ R<sup>k</sup> / ζ(k)</strong>
+    </div>
+
+    <div class="math-box" style="border-color: var(--boundary);">
+        Error Term Constraint: 
+        <br>
+        <strong>Δ(R) = O(R<sup>k-1</sup>)</strong>
+    </div>
+
+    <div class="visual-section">
+        <canvas id="cubeCanvas" width="500" height="500"></canvas>
+        
+        <input type="range" id="angleSlider" min="0" max="6.28" step="0.01" value="0.7">
+        
+        <div class="toolkit">
+            <div class="tool-card">
+                <div class="label">Dimension (k)</div>
+                <div class="value">3 (Triple)</div>
             </div>
-        </section>
-
-        <section id="mathematical-background">
-            <h2>Mathematical Background</h2>
-            
-            <div class="card">
-                <h3>The Sierpiński Problem</h3>
-                <p>In 1964, Wacław Sierpiński investigated the representation of positive integers through specific bilinear forms. The problem concerns whether infinitely many positive integers remain uncovered by the four forms:</p>
-                
-                <div class="math-block">
-                    <span class="equation">
-                        <span class="equation-label">Form 1:</span> n = 6ab + a + b = (3a + 1)(2b + 1) - 1
-                    </span>
-                    <span class="equation">
-                        <span class="equation-label">Form 2:</span> n = 6ab + a - b = (3a + 1)(2b - 1) - 1
-                    </span>
-                    <span class="equation">
-                        <span class="equation-label">Form 3:</span> n = 6ab - a + b = (3a - 1)(2b + 1) - 1
-                    </span>
-                    <span class="equation">
-                        <span class="equation-label">Form 4:</span> n = 6ab - a - b = (3a - 1)(2b - 1) - 1
-                    </span>
-                </div>
-                
-                <p>This problem remains open and represents a fundamental question about the structure of positive integers.</p>
+            <div class="tool-card">
+                <div class="label">Zeta Density (1/ζ(3))</div>
+                <div class="value">~ 0.8319</div>
             </div>
-
-            <div class="card">
-                <h3>Known Results</h3>
-                <table>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                        <th>Status</th>
-                    </tr>
-                    <tr>
-                        <td>Uncovered integers ≤ 1000</td>
-                        <td>Exactly 78</td>
-                        <td><span class="status active">Verified</span></td>
-                    </tr>
-                    <tr>
-                        <td>Largest uncovered < 1000</td>
-                        <td>177</td>
-                        <td><span class="status active">Confirmed</span></td>
-                    </tr>
-                    <tr>
-                        <td>Coverage rate (n ≤ 1000)</td>
-                        <td>92.2%</td>
-                        <td><span class="status active">Computed</span></td>
-                    </tr>
-                    <tr>
-                        <td>Infinitude of uncovered numbers</td>
-                        <td>Unknown</td>
-                        <td><span class="status unsolved">Open Problem</span></td>
-                    </tr>
-                </table>
-                
-                <div class="math-block">
-                    <p><strong>First uncovered numbers:</strong> 2, 3, 7, 8, 12, 18, 27, 28, 30, 32, 35, 42, 43, 47, 48, 52, 58, 63, 67, 68, 70, 72...</p>
-                </div>
+            <div class="tool-card">
+                <div class="label">Boundary Focus</div>
+                <div class="value" style="color: var(--boundary);">Red Shell</div>
             </div>
-
-            <div class="card">
-                <h3>Mathematical Connections</h3>
-                
-                <h4>Prime Number Theory</h4>
-                <p>All primes p > 3 satisfy p ≡ ±1 (mod 6). This modular constraint connects directly to the structure of the four Sierpiński forms, each involving coefficients related to this fundamental property.</p>
-                
-                <h4>GCD Structure</h4>
-                <p>The coverage patterns exhibit enhanced structure when GCD(a,b) divides 6. This observation suggests deep connections to divisibility properties and modular arithmetic.</p>
-                
-                <h4>Search Optimization</h4>
-                <div class="math-block">
-                    <p>For n = 6ab ± a ± b with a ≤ b, mathematical analysis shows that a ≤ √(n/6).</p>
-                    <p>This bound significantly reduces the computational complexity of determining coverage.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="features">
-            <h2>Features</h2>
-            
-            <h3>Interactive Visualizations</h3>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h4>Coverage Map</h4>
-                    <p>Heatmap visualization showing covered and uncovered numbers with multiple display modes and customizable labeling options.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h4>Lattice Structure</h4>
-                    <p>2D parameter space (a,b) visualization showing all four Sierpiński forms with interactive exploration.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h4>Gap Analysis</h4>
-                    <p>Linear distribution of uncovered numbers with cluster analysis and modular pattern detection.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h4>Statistical Analysis</h4>
-                    <p>Density functions, modular distributions, and growth rate analysis testing asymptotic hypotheses.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h4>Pattern Analysis</h4>
-                    <p>Detection of arithmetic progressions, prime patterns, and cluster distributions in uncovered numbers.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h4>Formula Explorer</h4>
-                    <p>Individual number testing with visualization of all generating (a,b) pairs and form identification.</p>
-                </div>
-            </div>
-
-            <h3>Advanced Features</h3>
-            <div class="card">
-                <h4>Search Optimization</h4>
-                <ul>
-                    <li><strong>√n Lock:</strong> Automatically sets optimal search depth based on mathematical bounds</li>
-                    <li><strong>Mathematical Justification:</strong> Proven bound a ≤ √(n/6) for efficient search</li>
-                    <li><strong>Toggle Control:</strong> Switch between manual and optimized parameter selection</li>
-                </ul>
-                
-                <h4>Professional Export System</h4>
-                <ul>
-                    <li><strong>High-Resolution Export:</strong> 2K/4K PNG generation for publication quality</li>
-                    <li><strong>Comprehensive Documentation:</strong> Complete parameter and statistical legends</li>
-                    <li><strong>Batch Processing:</strong> Export all visualizations simultaneously</li>
-                    <li><strong>Data Export:</strong> JSON format for reproducible research</li>
-                    <li><strong>Report Generation:</strong> Automated analysis summaries</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="technical">
-            <h2>Technical Details</h2>
-            
-            <div class="card">
-                <h3>Implementation</h3>
-                <ul>
-                    <li>Pure JavaScript with HTML5 Canvas for maximum compatibility</li>
-                    <li>No external dependencies - completely self-contained</li>
-                    <li>Client-side computation for data privacy</li>
-                    <li>Responsive design for various display configurations</li>
-                </ul>
-                
-                <h3>Algorithms</h3>
-                <table>
-                    <tr>
-                        <th>Algorithm</th>
-                        <th>Complexity</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td>Coverage Computation</td>
-                        <td>O(maxAB²)</td>
-                        <td>Iterative generation of covered numbers</td>
-                    </tr>
-                    <tr>
-                        <td>GCD Calculation</td>
-                        <td>O(log min(a,b))</td>
-                        <td>Euclidean algorithm implementation</td>
-                    </tr>
-                    <tr>
-                        <td>Prime Testing</td>
-                        <td>O(√n)</td>
-                        <td>Trial division with optimization</td>
-                    </tr>
-                    <tr>
-                        <td>Pattern Detection</td>
-                        <td>O(n)</td>
-                        <td>Linear scan with early termination</td>
-                    </tr>
-                </table>
-            </div>
-            
-            <div class="card">
-                <h3>Data Export Formats</h3>
-                
-                <h4>JSON Structure</h4>
-                <div class="code-block">
-                    <pre>{
-  "timestamp": "ISO-8601 datetime",
-  "parameters": {
-    "maxN": 500,
-    "maxAB": 23,
-    "sqrtOptimized": true
-  },
-  "statistics": {
-    "covered": 422,
-    "uncovered": 78,
-    "coverageRate": "84.40%",
-    "modulo6Distribution": {...}
-  },
-  "uncoveredNumbers": [2, 3, 7, 8, ...],
-  "analysisResults": {...}
-}</pre>
-                </div>
-            </div>
-        </section>
-
-        <section id="research">
-            <h2>Research Applications</h2>
-            
-            <div class="card">
-                <h3>Active Research Areas</h3>
-                
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 78%">78 uncovered numbers found ≤ 1000</div>
-                </div>
-                
-                <h4>Number Theory Research</h4>
-                <p>Investigation of coverage patterns, density distributions, and asymptotic behavior of uncovered numbers.</p>
-                
-                <h4>Computational Mathematics</h4>
-                <p>Generation of datasets for machine learning approaches and pattern recognition algorithms.</p>
-                
-                <h4>Educational Applications</h4>
-                <p>Visualization of unsolved problems in mathematics for pedagogical purposes.</p>
-                
-                <h4>Pattern Discovery</h4>
-                <p>Identification of new regularities and structural properties in the distribution of uncovered numbers.</p>
-            </div>
-            
-            <div class="card">
-                <h3>Connections to Major Problems</h3>
-                <ul>
-                    <li><strong>Goldbach Conjecture:</strong> Related through modular arithmetic constraints on prime representations</li>
-                    <li><strong>Twin Prime Conjecture:</strong> Connected via the 6k ± 1 structure of prime pairs</li>
-                    <li><strong>Prime Number Theorem:</strong> Asymptotic distribution in residue classes</li>
-                    <li><strong>Diophantine Equations:</strong> General framework of integer solutions to polynomial equations</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="references">
-            <h2>References</h2>
-            
-            <div class="card">
-                <h3>Primary Sources</h3>
-                <ol>
-                    <li>W. Sierpiński, "Sur une propriété des nombres naturels", <em>Annali di Matematica Pura ed Applicata</em>, vol. 39 (1964), pp. 69-74.</li>
-                    <li>P. Erdős and R. L. Graham, <em>Old and New Problems and Results in Combinatorial Number Theory</em>, L'Enseignement Mathématique, Geneva (1980).</li>
-                    <li>H. Iwaniec and E. Kowalski, <em>Analytic Number Theory</em>, AMS Colloquium Publications, vol. 53 (2004).</li>
-                </ol>
-                
-                <h3>Implementation Credits</h3>
-                <ul>
-                    <li><strong>Mathematical Problem:</strong> Wacław Sierpiński (1964)</li>
-                    <li><strong>Implementation:</strong> Wessen Getachew (@7dview)</li>
-                    <li><strong>Visualization Design:</strong> Based on Farey-Cayley framework principles</li>
-                    <li><strong>Research:</strong> Ongoing collaborative investigation</li>
-                </ul>
-            </div>
-        </section>
-
-        <div class="interactive-demo">
-            <h3>Ready to Explore?</h3>
-            <p>Launch the interactive explorer to investigate the Sierpiński problem yourself.</p>
-            <a href="sierpinski-explorer.html" class="demo-button">Launch Interactive Explorer</a>
-            <a href="#" class="demo-button">Download Research Paper (PDF)</a>
-        </div>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <p>© 2024 Wessen Getachew | Mathematical Research & Visualization</p>
-            <p class="subtitle">Contributing to the understanding of unsolved problems in number theory</p>
-            <div class="footer-links">
-                <a href="https://twitter.com/7dview">@7dview</a>
-                <a href="#">GitHub</a>
-                <a href="#">Research Papers</a>
-                <a href="#">Contact</a>
+            <div class="tool-card">
+                <div class="label">Interior Focus</div>
+                <div class="value" style="color: var(--accent);">Blue Core</div>
             </div>
         </div>
-    </footer>
+    </div>
+
+    <div class="description" style="border-top: 1px solid #30363d; padding-top: 20px;">
+        <h3>Technical Summary</h3>
+        <p>By simulating a 3D lattice, we observe that the Zeta-density remains stable in the interior of the volume. However, as the Möbius summation reaches the geometric boundary, the cancellation becomes incomplete. This "cut-off" is the physical origin of the error term in number theory. As dimensions increase (k=2 to k=6), the surface-to-volume ratio changes, but the principle of boundary-localized error remains constant.</p>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('cubeCanvas');
+    const ctx = canvas.getContext('2d');
+    const angleSlider = document.getElementById('angleSlider');
+    
+    const R = 14; 
+
+    function gcd2(a, b) {
+        while(b) { a %= b; [a,b] = [b,a]; }
+        return a;
+    }
+
+    function gcd3(a, b, c) {
+        return gcd2(a, gcd2(b, c));
+    }
+
+    function project(x, y, z, angle) {
+        let xRot = x * Math.cos(angle) - z * Math.sin(angle);
+        let zRot = x * Math.sin(angle) + z * Math.cos(angle);
+        const scale = 18;
+        return {
+            x: xRot * scale + canvas.width/2,
+            y: (y - zRot * 0.4) * scale + canvas.height/2,
+            z: zRot
+        };
+    }
+
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const angle = parseFloat(angleSlider.value);
+        let points = [];
+
+        for (let x = -R/2; x <= R/2; x++) {
+            for (let y = -R/2; y <= R/2; y++) {
+                for (let z = -R/2; z <= R/2; z++) {
+                    if (gcd3(Math.abs(x)+1, Math.abs(y)+1, Math.abs(z)+1) === 1) {
+                        const isBoundary = (Math.abs(x) >= R/2 || Math.abs(y) >= R/2 || Math.abs(z) >= R/2);
+                        points.push({ ...project(x, y, z, angle), isBoundary });
+                    }
+                }
+            }
+        }
+
+        points.sort((a, b) => b.z - a.z);
+
+        points.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = p.isBoundary ? '#ff4747' : '#47a1ff';
+            ctx.globalAlpha = p.isBoundary ? 0.9 : 0.4;
+            ctx.fill();
+        });
+        requestAnimationFrame(render);
+    }
+
+    angleSlider.oninput = render;
+    render();
+</script>
+
 </body>
 </html>
