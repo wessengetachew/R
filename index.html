@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Boundary Cancellation Principle | Research Tool</title>
+    <title>The Boundary Cancellation Principle | Research Dashboard</title>
     <style>
         :root {
             --bg: #0b0e14;
@@ -12,10 +11,11 @@
             --boundary: #ff4747;
             --text: #c9d1d9;
             --math-box: #0d1117;
+            --border: #30363d;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -26,169 +26,196 @@
             align-items: center;
         }
 
-        .container { max-width: 900px; width: 100%; }
+        .container { max-width: 1000px; width: 100%; }
 
-        h1 { color: var(--accent); font-weight: 300; font-size: 2.5rem; text-align: center; }
+        h1 { color: var(--accent); font-weight: 300; font-size: 2.2rem; margin-bottom: 10px; }
 
-        .math-box {
+        .abstract-section {
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .abstract-text { font-style: italic; color: #8b949e; text-align: justify; }
+
+        .formula-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .formula-box {
             background: var(--math-box);
             border: 1px solid var(--accent);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            margin: 20px 0;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-family: serif;
+            font-size: 1.3rem;
         }
 
-        .visual-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--panel);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid #30363d;
-            margin: 30px 0;
-        }
-
-        canvas {
-            border-radius: 4px;
-            background: #000;
-            cursor: move;
-        }
-
-        .toolkit {
+        .viz-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
 
-        .tool-card {
-            background: var(--math-box);
-            padding: 15px;
+        canvas { background: #000; border-radius: 4px; width: 100%; height: auto; }
+
+        .controls { display: flex; flex-direction: column; gap: 15px; }
+
+        .data-card {
+            background: var(--bg);
+            padding: 12px;
             border-radius: 6px;
             border-left: 4px solid var(--accent);
         }
 
-        .label { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; }
-        .value { font-family: monospace; font-size: 1.1rem; color: #fff; }
+        .label { font-size: 0.7rem; color: #8b949e; text-transform: uppercase; font-weight: bold; }
+        .value { font-family: monospace; font-size: 1.2rem; color: #fff; }
 
-        .description { text-align: justify; color: #8b949e; }
-        
-        input[type=range] { width: 100%; margin: 20px 0; }
+        input[type=range] { width: 100%; accent-color: var(--accent); }
+
+        .highlight-boundary { border-left-color: var(--boundary); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>The Boundary Cancellation Principle</h1>
-
-    <div class="description">
-        <p>This research tool analyzes the computational error terms in arithmetic lattices. In an infinite lattice, the density of coprime tuples is governed by the Riemann Zeta Function. In finite space, the <b>Boundary Cancellation Principle</b> states that the error term is a direct geometric residue of the search-space perimeter.</p>
+    
+    <div class="abstract-section">
+        <div class="label">Abstract</div>
+        <p class="abstract-text">
+            This study analyzes the deterministic nature of error terms in arithmetic lattices. We propose that the variance observed in coprime counts is a localized phenomenon occurring at the search-space truncation point. By isolating the (k-1) boundary shell, we demonstrate that Δ(R) is the geometric residue of an incomplete Möbius summation.
+        </p>
     </div>
 
-    <div class="math-box">
-        Density Prediction: 
-        <br>
-        <strong>N(R) ≈ R<sup>k</sup> / ζ(k)</strong>
-    </div>
-
-    <div class="math-box" style="border-color: var(--boundary);">
-        Error Term Constraint: 
-        <br>
-        <strong>Δ(R) = O(R<sup>k-1</sup>)</strong>
-    </div>
-
-    <div class="visual-section">
-        <canvas id="cubeCanvas" width="500" height="500"></canvas>
-        
-        <input type="range" id="angleSlider" min="0" max="6.28" step="0.01" value="0.7">
-        
-        <div class="toolkit">
-            <div class="tool-card">
-                <div class="label">Dimension (k)</div>
-                <div class="value">3 (Triple)</div>
-            </div>
-            <div class="tool-card">
-                <div class="label">Zeta Density (1/ζ(3))</div>
-                <div class="value">~ 0.8319</div>
-            </div>
-            <div class="tool-card">
-                <div class="label">Boundary Focus</div>
-                <div class="value" style="color: var(--boundary);">Red Shell</div>
-            </div>
-            <div class="tool-card">
-                <div class="label">Interior Focus</div>
-                <div class="value" style="color: var(--accent);">Blue Core</div>
-            </div>
+    <div class="formula-container">
+        <div class="formula-box">
+            N(R) &asymp; R<sup>k</sup> / &zeta;(k)
+        </div>
+        <div class="formula-box" style="border-color: var(--boundary);">
+            &Delta;(R) = O(R<sup>k-1</sup>)
         </div>
     </div>
 
-    <div class="description" style="border-top: 1px solid #30363d; padding-top: 20px;">
-        <h3>Technical Summary</h3>
-        <p>By simulating a 3D lattice, we observe that the Zeta-density remains stable in the interior of the volume. However, as the Möbius summation reaches the geometric boundary, the cancellation becomes incomplete. This "cut-off" is the physical origin of the error term in number theory. As dimensions increase (k=2 to k=6), the surface-to-volume ratio changes, but the principle of boundary-localized error remains constant.</p>
+    <div class="viz-layout">
+        <div class="canvas-area">
+            <canvas id="mainCanvas" width="600" height="600"></canvas>
+            <div style="margin-top:20px;">
+                <span class="label">Search Radius (R): <span id="rNum">15</span></span>
+                <input type="range" id="rInput" min="5" max="30" value="15">
+                
+                <span class="label">Dimension (k): <span id="kNum">3</span></span>
+                <input type="range" id="kInput" min="2" max="3" value="3">
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="data-card">
+                <div class="label">Volume (R<sup>k</sup>)</div>
+                <div id="statVol" class="value">0</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Theoretical Density</div>
+                <div id="statDens" class="value">0</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Predicted Count</div>
+                <div id="statPred" class="value">0</div>
+            </div>
+            <div class="data-card highlight-boundary">
+                <div class="label">Actual Count</div>
+                <div id="statActual" class="value">0</div>
+            </div>
+            <div class="data-card highlight-boundary">
+                <div class="label">Absolute Error |&Delta;|</div>
+                <div id="statErr" class="value">0</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    const canvas = document.getElementById('cubeCanvas');
+    const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d');
-    const angleSlider = document.getElementById('angleSlider');
-    
-    const R = 14; 
+    const rInput = document.getElementById('rInput');
+    const kInput = document.getElementById('kInput');
 
-    function gcd2(a, b) {
-        while(b) { a %= b; [a,b] = [b,a]; }
+    const zeta = { 2: 1.6449340668, 3: 1.2020569031 };
+
+    function gcd(a, b) {
+        while (b) { a %= b; [a, b] = [b, a]; }
         return a;
     }
 
-    function gcd3(a, b, c) {
-        return gcd2(a, gcd2(b, c));
-    }
+    function update() {
+        const R = parseInt(rInput.value);
+        const K = parseInt(kInput.value);
+        document.getElementById('rNum').innerText = R;
+        document.getElementById('kNum').innerText = K;
 
-    function project(x, y, z, angle) {
-        let xRot = x * Math.cos(angle) - z * Math.sin(angle);
-        let zRot = x * Math.sin(angle) + z * Math.cos(angle);
-        const scale = 18;
-        return {
-            x: xRot * scale + canvas.width/2,
-            y: (y - zRot * 0.4) * scale + canvas.height/2,
-            z: zRot
-        };
-    }
-
-    function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const angle = parseFloat(angleSlider.value);
+        let actual = 0;
         let points = [];
+        const center = 300;
+        const scale = 260 / R;
 
-        for (let x = -R/2; x <= R/2; x++) {
-            for (let y = -R/2; y <= R/2; y++) {
-                for (let z = -R/2; z <= R/2; z++) {
-                    if (gcd3(Math.abs(x)+1, Math.abs(y)+1, Math.abs(z)+1) === 1) {
-                        const isBoundary = (Math.abs(x) >= R/2 || Math.abs(y) >= R/2 || Math.abs(z) >= R/2);
-                        points.push({ ...project(x, y, z, angle), isBoundary });
+        if (K === 2) {
+            for (let x = 1; x <= R; x++) {
+                for (let y = 1; y <= R; y++) {
+                    if (gcd(x, y) === 1) {
+                        actual++;
+                        const isB = (x===1 || x===R || y===1 || y===R);
+                        points.push({x: (x - R/2)*scale + center, y: (y - R/2)*scale + center, z: 0, isB});
+                    }
+                }
+            }
+        } else {
+            for (let x = 1; x <= R; x++) {
+                for (let y = 1; y <= R; y++) {
+                    for (let z = 1; z <= R; z++) {
+                        if (gcd(x, gcd(y, z)) === 1) {
+                            actual++;
+                            const isB = (x===1 || x===R || y===1 || y===R || z===1 || z===R);
+                            let px = (x - R/2 - (z - R/2) * 0.4) * scale + center;
+                            let py = (y - R/2 - (z - R/2) * 0.4) * scale + center;
+                            points.push({x: px, y: py, z: z, isB});
+                        }
                     }
                 }
             }
         }
 
-        points.sort((a, b) => b.z - a.z);
+        const vol = Math.pow(R, K);
+        const dens = 1 / zeta[K];
+        const pred = vol * dens;
 
-        points.forEach(p => {
+        document.getElementById('statVol').innerText = vol;
+        document.getElementById('statDens').innerText = dens.toFixed(5);
+        document.getElementById('statPred').innerText = pred.toFixed(2);
+        document.getElementById('statActual').innerText = actual;
+        document.getElementById('statErr').innerText = Math.abs(actual - pred).toFixed(2);
+
+        ctx.clearRect(0,0,600,600);
+        points.sort((a,b) => b.z - a.z).forEach(p => {
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = p.isBoundary ? '#ff4747' : '#47a1ff';
-            ctx.globalAlpha = p.isBoundary ? 0.9 : 0.4;
+            ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+            ctx.fillStyle = p.isB ? '#ff4747' : '#47a1ff';
+            ctx.globalAlpha = p.isB ? 1.0 : 0.4;
             ctx.fill();
         });
-        requestAnimationFrame(render);
     }
 
-    angleSlider.oninput = render;
-    render();
+    [rInput, kInput].forEach(el => el.addEventListener('input', update));
+    update();
 </script>
 
 </body>
