@@ -887,7 +887,19 @@
     border-color: #666;
   }
 </style>
+/* MathJax boxed equations (dark mode fix) */
+  body.dark-mode mjx-container[jax="CHTML"] {
+    color: #e6e6e6;
+  }
 
+  body.dark-mode mjx-container[jax="CHTML"] mjx-box {
+    border-color: #aaa !important;
+    background-color: transparent !important;
+  }
+
+  body.dark-mode mjx-container[jax="CHTML"] mjx-mtd {
+    border-color: #aaa !important;
+  }
 <script>
   const toggle = document.getElementById("darkToggle");
 
